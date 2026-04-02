@@ -1,26 +1,64 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app">
+    <div class="logo-container">
+      <img src="./assets/logo.svg" alt="黄金价格走势图" class="logo"/>
+      <h1 class="app-title">黄金价格走势图</h1>
+    </div>
+    <GoldChart />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import GoldChart from './components/GoldChart.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    GoldChart
   }
 }
 </script>
 
 <style>
-#app {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+  min-height: 100vh;
+}
+
+.app {
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 4px 8px rgba(230, 162, 60, 0.3));
+}
+
+.app-title {
+  color: #e6a23c;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(230, 162, 60, 0.3);
+  margin: 0;
 }
 </style>
