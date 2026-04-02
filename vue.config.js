@@ -20,14 +20,21 @@ module.exports = defineConfig({
           const outputDir = compilation.outputOptions.path
           let apiBaseUrl = process.env.VUE_APP_API_BASE_URL
           
-          if (!apiBaseUrl) {
-            // 不设置默认值，让前端代码动态获取
-            console.log('⚠️  未指定后端地址，将使用运行时动态获取')
+          // 从环境变量或默认值获取端口号
+          let apiPort = '41736'
+          if (apiBaseUrl) {
+            // 如果配置了完整 URL，提取端口号
+            try {
+              const url = new URL(apiBaseUrl)
+              apiPort = url.port || (url.protocol === 'https:' ? '443' : '80')
+            } catch (e) {
+              console.log('无效的 API 地址格式')
+            }
           }
           
           // 生成 config.json 配置文件
           const configContent = {
-            apiUrl: apiBaseUrl || ''  // 如果未设置，留空让前端动态获取
+            apiPort: apiPort  // 配置端口号，会自动使用当前服务器地址
           }
           fs.writeFileSync(
             path.join(outputDir, 'config.json'),
