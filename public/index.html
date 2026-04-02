@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="<%= BASE_URL %>logo.svg">
     <title>黄金价格走势图</title>
+    <!-- 加载后端配置 -->
+    <script>
+      // 在应用启动前加载配置文件
+      window.APP_CONFIG = { apiUrl: '' };
+      try {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '<%= BASE_URL %>config.json', false);
+        xhr.send();
+        if (xhr.status === 200) {
+          window.APP_CONFIG = JSON.parse(xhr.responseText);
+        }
+      } catch (e) {
+        console.log('未找到配置文件，将使用默认配置');
+      }
+    </script>
   </head>
   <body>
     <noscript>
