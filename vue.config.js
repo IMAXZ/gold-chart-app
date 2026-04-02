@@ -21,12 +21,13 @@ module.exports = defineConfig({
           let apiBaseUrl = process.env.VUE_APP_API_BASE_URL
           
           if (!apiBaseUrl) {
-            apiBaseUrl = 'http://localhost:41736'
+            // 不设置默认值，让前端代码动态获取
+            console.log('⚠️  未指定后端地址，将使用运行时动态获取')
           }
           
           // 生成 config.json 配置文件
           const configContent = {
-            apiUrl: apiBaseUrl
+            apiUrl: apiBaseUrl || ''  // 如果未设置，留空让前端动态获取
           }
           fs.writeFileSync(
             path.join(outputDir, 'config.json'),
@@ -42,12 +43,6 @@ module.exports = defineConfig({
     <!-- IIS URL 重写规则 -->
     <rewrite>
       <rules>
-        <!-- API 请求代理到后端服务器 -->
-        <rule name="API Proxy" stopProcessing="true">
-          <match url="^api/(.*)" />
-          <action type="Rewrite" url="${apiBaseUrl}/api/{R:1}" />
-        </rule>
-        
         <!-- Vue Router history 模式支持 -->
         <rule name="Handle History Mode and Custom 404/500" stopProcessing="true">
           <match url="^(.*)$" />
