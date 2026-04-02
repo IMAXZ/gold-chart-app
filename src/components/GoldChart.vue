@@ -1,31 +1,54 @@
 <template>
-  <div class="gold-chart-container">
+  <div class="gold-chart-container" :class="{ 'light-theme': theme === 'light' }">
     <div class="header">
-      <h1 class="title">黄金价格走势图</h1>
-      
+      <div class="header-top">
+        <h1 class="title">黄金价格走势图</h1>
+        <button class="btn-theme" @click="toggleTheme">
+          <span class="icon">{{ theme === 'dark' ? '☀️' : '🌙' }}</span>
+          {{ theme === 'dark' ? '明亮' : '暗黑' }}
+        </button>
+      </div>
+
+      <div class="currency-switcher">
+        <button
+          :class="['btn-currency', { active: currency === 'USD' }]"
+          @click="switchCurrency('USD')"
+        >
+          <span class="icon">💵</span>
+          美元 (USD)
+        </button>
+        <button
+          :class="['btn-currency', { active: currency === 'CNY' }]"
+          @click="switchCurrency('CNY')"
+        >
+          <span class="icon">💴</span>
+          人民币 (CNY)
+        </button>
+      </div>
+
       <div class="chart-type-switcher">
-        <button 
+        <button
           :class="['btn-chart-type', { active: chartType === 'price' }]"
           @click="switchChartType('price')"
         >
           <span class="icon">💰</span>
           价格图
         </button>
-        <button 
+        <button
           :class="['btn-chart-type', { active: chartType === 'trend' }]"
           @click="switchChartType('trend')"
         >
           <span class="icon">📈</span>
           涨跌幅趋势
         </button>
-        <button 
+        <button
           :class="['btn-chart-type', { active: chartType === 'rate' }]"
           @click="switchChartType('rate')"
         >
           <span class="icon">💱</span>
           汇率走势
         </button>
-        <button 
+        <button
           :class="['btn-chart-type', { active: chartType === 'compare' }]"
           @click="switchChartType('compare')"
         >
@@ -82,8 +105,8 @@
     </div>
     
     <div class="stats-panel" v-if="stats">
-      <!-- 价格图统计 -->
-      <template v-if="chartType === 'price'">
+      <!-- USD 价格图统计 -->
+      <template v-if="chartType === 'price' && currency === 'USD'">
         <div class="stat-item usd-stat">
           <span class="stat-label">USD 最高</span>
           <span class="stat-value usd">{{ stats.usdMax }}</span>
@@ -96,6 +119,24 @@
           <span class="stat-label">USD 平均</span>
           <span class="stat-value usd">{{ stats.usdAvg }}</span>
         </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 起始</span>
+          <span class="stat-value usd">{{ stats.usdStart }}</span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 最新</span>
+          <span class="stat-value usd">{{ stats.usdEnd }}</span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 涨跌</span>
+          <span class="stat-value" :class="stats.usdChangePositive ? 'up' : 'down'">
+            {{ stats.usdChangePositive ? '+' : '' }}{{ stats.usdChange }}%
+          </span>
+        </div>
+      </template>
+
+      <!-- CNY 价格图统计 -->
+      <template v-else-if="chartType === 'price' && currency === 'CNY'">
         <div class="stat-item cny-stat">
           <span class="stat-label">CNY 最高</span>
           <span class="stat-value cny">{{ stats.cnyMax }}</span>
@@ -108,10 +149,54 @@
           <span class="stat-label">CNY 平均</span>
           <span class="stat-value cny">{{ stats.cnyAvg }}</span>
         </div>
+        <div class="stat-item cny-stat">
+          <span class="stat-label">CNY 起始</span>
+          <span class="stat-value cny">{{ stats.cnyStart }}</span>
+        </div>
+        <div class="stat-item cny-stat">
+          <span class="stat-label">CNY 最新</span>
+          <span class="stat-value cny">{{ stats.cnyEnd }}</span>
+        </div>
+        <div class="stat-item cny-stat">
+          <span class="stat-label">CNY 涨跌</span>
+          <span class="stat-value" :class="stats.cnyChangePositive ? 'up' : 'down'">
+            {{ stats.cnyChangePositive ? '+' : '' }}{{ stats.cnyChange }}%
+          </span>
+        </div>
       </template>
-      
-      <!-- 涨跌幅趋势统计 -->
-      <template v-else-if="chartType === 'trend'">
+
+      <!-- USD 涨跌幅趋势统计 -->
+      <template v-else-if="chartType === 'trend' && currency === 'USD'">
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 起始价</span>
+          <span class="stat-value usd">{{ stats.usdStart }}</span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 最新价</span>
+          <span class="stat-value usd">{{ stats.usdEnd }}</span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 涨跌</span>
+          <span class="stat-value" :class="stats.usdChangePositive ? 'up' : 'down'">
+            {{ stats.usdChangePositive ? '+' : '' }}{{ stats.usdChange }}%
+          </span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 最高</span>
+          <span class="stat-value usd">{{ stats.usdMax }}</span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 最低</span>
+          <span class="stat-value usd">{{ stats.usdMin }}</span>
+        </div>
+        <div class="stat-item usd-stat">
+          <span class="stat-label">USD 平均</span>
+          <span class="stat-value usd">{{ stats.usdAvg }}</span>
+        </div>
+      </template>
+
+      <!-- CNY 涨跌幅趋势统计 -->
+      <template v-else-if="chartType === 'trend' && currency === 'CNY'">
         <div class="stat-item cny-stat">
           <span class="stat-label">CNY 起始价</span>
           <span class="stat-value cny">{{ stats.cnyStart }}</span>
@@ -139,7 +224,7 @@
           <span class="stat-value cny">{{ stats.cnyAvg }}</span>
         </div>
       </template>
-      
+
       <!-- 汇率走势统计 -->
       <template v-else-if="chartType === 'rate'">
         <div class="stat-item rate-stat">
@@ -169,7 +254,7 @@
           <span class="stat-value rate">{{ stats.rateVolatility }}%</span>
         </div>
       </template>
-      
+
       <!-- 价格对比统计 -->
       <template v-else-if="chartType === 'compare'">
         <div class="stat-item usd-stat">
@@ -219,6 +304,8 @@ export default {
     const selectedQuickDay = ref(0)
     const chartData = ref(null)
     const chartType = ref('price')
+    const currency = ref('USD')
+    const theme = ref('dark')
     
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
@@ -378,59 +465,100 @@ export default {
       return data.map(value => ((value - baseValue) / baseValue * 100))
     }
     
+    const getThemeColors = () => {
+      if (theme.value === 'light') {
+        return {
+          bg: 'transparent',
+          title: '#d4a017',
+          subtext: '#666',
+          tooltipBg: 'rgba(255, 255, 255, 0.95)',
+          tooltipBorder: '#d4a017',
+          tooltipText: '#333',
+          legend: '#666',
+          axisLine: '#ccc',
+          axisLabel: '#666',
+          splitLine: 'rgba(0, 0, 0, 0.1)',
+          usdColor: '#d4a017',
+          cnyColor: '#e74c3c',
+          rateColor: '#3498db',
+          upColor: '#27ae60',
+          downColor: '#e74c3c'
+        }
+      }
+      return {
+        bg: 'transparent',
+        title: '#e6a23c',
+        subtext: '#888',
+        tooltipBg: 'rgba(30, 30, 40, 0.95)',
+        tooltipBorder: '#e6a23c',
+        tooltipText: '#fff',
+        legend: '#ccc',
+        axisLine: '#666',
+        axisLabel: '#999',
+        splitLine: 'rgba(255, 255, 255, 0.1)',
+        usdColor: '#ffd700',
+        cnyColor: '#ff6b6b',
+        rateColor: '#00d4ff',
+        upColor: '#4ade80',
+        downColor: '#ff6b6b'
+      }
+    }
+
     const getPriceOption = (data) => {
       const usdData = data.series[0]?.data || []
       const cnyData = data.series[1]?.data || []
-      
+      const colors = getThemeColors()
+      const isUSD = currency.value === 'USD'
+      const priceData = isUSD ? usdData : cnyData
+      const currencyName = isUSD ? 'USD' : 'CNY'
+      const mainColor = isUSD ? colors.usdColor : colors.cnyColor
+
       return {
-        backgroundColor: 'transparent',
+        backgroundColor: colors.bg,
         title: {
-          text: '黄金价格走势',
+          text: `黄金价格走势 (${currencyName})`,
           subtext: '原始价格数据',
           left: 'center',
           top: 10,
           textStyle: {
-            color: '#e6a23c',
+            color: colors.title,
             fontSize: 18,
             fontWeight: 'bold'
           },
           subtextStyle: {
-            color: '#888',
+            color: colors.subtext,
             fontSize: 12
           }
         },
         tooltip: {
           trigger: 'axis',
-          backgroundColor: 'rgba(30, 30, 40, 0.95)',
-          borderColor: '#e6a23c',
+          backgroundColor: colors.tooltipBg,
+          borderColor: colors.tooltipBorder,
           borderWidth: 1,
           textStyle: {
-            color: '#fff'
+            color: colors.tooltipText
           },
           axisPointer: {
             type: 'cross',
             crossStyle: {
-              color: '#999'
+              color: colors.axisLabel
             }
           },
           formatter: function(params) {
-            let result = `<div style="font-weight:bold;margin-bottom:5px;">${params[0].axisValue}</div>`
-            params.forEach((item) => {
-              const color = item.seriesName.includes('USD') ? '#ffd700' : '#ff6b6b'
-              result += `<div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:rgba(255,255,255,0.05);border-radius:4px;">
-                <span style="display:inline-block;width:10px;height:10px;background:${color};border-radius:50%;margin-right:8px;"></span>
-                <span style="flex:1;">${item.seriesName}</span>
-                <span style="color:${color};font-weight:bold;">${item.value.toFixed(2)}</span>
+            const item = params[0]
+            return `<div style="font-weight:bold;margin-bottom:5px;">${item.axisValue}</div>
+              <div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:${theme.value === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'};border-radius:4px;">
+                <span style="display:inline-block;width:10px;height:10px;background:${mainColor};border-radius:50%;margin-right:8px;"></span>
+                <span style="flex:1;">黄金价格 (${currencyName})</span>
+                <span style="color:${mainColor};font-weight:bold;">${item.value.toFixed(2)}</span>
               </div>`
-            })
-            return result
           }
         },
         legend: {
-          data: ['黄金价格 (USD)', '黄金价格 (CNY)'],
+          data: [`黄金价格 (${currencyName})`],
           top: 60,
           textStyle: {
-            color: '#ccc'
+            color: colors.legend
           }
         },
         grid: {
@@ -449,11 +577,11 @@ export default {
           }),
           axisLine: {
             lineStyle: {
-              color: '#666'
+              color: colors.axisLine
             }
           },
           axisLabel: {
-            color: '#999',
+            color: colors.axisLabel,
             rotate: 45,
             fontSize: 11
           }
@@ -461,38 +589,21 @@ export default {
         yAxis: [
           {
             type: 'value',
-            name: 'USD',
+            name: currencyName,
             position: 'left',
             axisLine: {
               lineStyle: {
-                color: '#ffd700'
+                color: mainColor
               }
             },
             axisLabel: {
-              color: '#ffd700',
+              color: mainColor,
               formatter: '{value}'
             },
             splitLine: {
               lineStyle: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                color: colors.splitLine
               }
-            }
-          },
-          {
-            type: 'value',
-            name: 'CNY',
-            position: 'right',
-            axisLine: {
-              lineStyle: {
-                color: '#ff6b6b'
-              }
-            },
-            axisLabel: {
-              color: '#ff6b6b',
-              formatter: '{value}'
-            },
-            splitLine: {
-              show: false
             }
           }
         ],
@@ -509,52 +620,29 @@ export default {
             bottom: 10,
             handleSize: '80%',
             textStyle: {
-              color: '#999'
+              color: colors.axisLabel
             }
           }
         ],
         series: [
           {
-            name: '黄金价格 (USD)',
+            name: `黄金价格 (${currencyName})`,
             type: 'line',
-            data: usdData,
+            data: priceData,
             smooth: true,
             symbol: 'circle',
             symbolSize: 6,
-            yAxisIndex: 0,
             lineStyle: {
               width: 3,
-              color: '#ffd700'
+              color: mainColor
             },
             itemStyle: {
-              color: '#ffd700'
+              color: mainColor
             },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: 'rgba(255, 215, 0, 0.3)' },
-                { offset: 1, color: 'rgba(255, 215, 0, 0.05)' }
-              ])
-            }
-          },
-          {
-            name: '黄金价格 (CNY)',
-            type: 'line',
-            data: cnyData,
-            smooth: true,
-            symbol: 'circle',
-            symbolSize: 6,
-            yAxisIndex: 1,
-            lineStyle: {
-              width: 3,
-              color: '#ff6b6b'
-            },
-            itemStyle: {
-              color: '#ff6b6b'
-            },
-            areaStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: 'rgba(255, 107, 107, 0.3)' },
-                { offset: 1, color: 'rgba(255, 107, 107, 0.05)' }
+                { offset: 0, color: mainColor + (theme.value === 'light' ? '4D' : '4D') },
+                { offset: 1, color: mainColor + (theme.value === 'light' ? '0D' : '0D') }
               ])
             }
           }
@@ -563,60 +651,63 @@ export default {
     }
     
     const getTrendOption = (data) => {
-      const cnyData = data.series[1]?.data || []
-      
-      const cnyChangeRate = calculateChangeRate(cnyData)
-      
+      const isUSD = currency.value === 'USD'
+      const priceData = isUSD ? (data.series[0]?.data || []) : (data.series[1]?.data || [])
+      const changeRate = calculateChangeRate(priceData)
+      const colors = getThemeColors()
+      const mainColor = isUSD ? colors.usdColor : colors.cnyColor
+      const currencyName = isUSD ? 'USD' : 'CNY'
+
       return {
-        backgroundColor: 'transparent',
+        backgroundColor: colors.bg,
         title: {
-          text: 'CNY 黄金价格涨跌趋势 (%)',
+          text: `${currencyName} 黄金价格涨跌趋势 (%)`,
           subtext: '以时间段起始价格为基准计算涨跌幅',
           left: 'center',
           top: 10,
           textStyle: {
-            color: '#e6a23c',
+            color: colors.title,
             fontSize: 18,
             fontWeight: 'bold'
           },
           subtextStyle: {
-            color: '#888',
+            color: colors.subtext,
             fontSize: 12
           }
         },
         tooltip: {
           trigger: 'axis',
-          backgroundColor: 'rgba(30, 30, 40, 0.95)',
-          borderColor: '#e6a23c',
+          backgroundColor: colors.tooltipBg,
+          borderColor: colors.tooltipBorder,
           borderWidth: 1,
           textStyle: {
-            color: '#fff'
+            color: colors.tooltipText
           },
           axisPointer: {
             type: 'cross',
             crossStyle: {
-              color: '#999'
+              color: colors.axisLabel
             }
           },
           formatter: function(params) {
             const item = params[0]
-            const originalValue = cnyData[item.dataIndex]
+            const originalValue = priceData[item.dataIndex]
             const changeIcon = item.value >= 0 ? '↗' : '↘'
-            const changeColor = item.value >= 0 ? '#4ade80' : '#ff6b6b'
+            const changeColor = item.value >= 0 ? colors.upColor : colors.downColor
             return `<div style="font-weight:bold;margin-bottom:5px;">${item.axisValue}</div>
-              <div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:rgba(255,255,255,0.05);border-radius:4px;">
-                <span style="display:inline-block;width:10px;height:10px;background:#ff6b6b;border-radius:50%;margin-right:8px;"></span>
-                <span style="flex:1;">CNY 黄金价格</span>
-                <span style="margin-right:10px;color:#ccc;">${originalValue.toFixed(2)}</span>
+              <div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:${theme.value === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'};border-radius:4px;">
+                <span style="display:inline-block;width:10px;height:10px;background:${mainColor};border-radius:50%;margin-right:8px;"></span>
+                <span style="flex:1;">${currencyName} 黄金价格</span>
+                <span style="margin-right:10px;color:${colors.axisLabel};">${originalValue.toFixed(2)}</span>
                 <span style="color:${changeColor};font-weight:bold;">${changeIcon} ${item.value >= 0 ? '+' : ''}${item.value.toFixed(3)}%</span>
               </div>`
           }
         },
         legend: {
-          data: ['CNY 涨跌幅'],
+          data: [`${currencyName} 涨跌幅`],
           top: 60,
           textStyle: {
-            color: '#ccc'
+            color: colors.legend
           }
         },
         grid: {
@@ -635,11 +726,11 @@ export default {
           }),
           axisLine: {
             lineStyle: {
-              color: '#666'
+              color: colors.axisLine
             }
           },
           axisLabel: {
-            color: '#999',
+            color: colors.axisLabel,
             rotate: 45,
             fontSize: 11
           }
@@ -649,7 +740,7 @@ export default {
             type: 'value',
             name: '涨跌幅 (%)',
             nameTextStyle: {
-              color: '#ff6b6b',
+              color: mainColor,
               fontSize: 14,
               fontWeight: 'bold',
               padding: [0, 0, 0, 10]
@@ -658,24 +749,24 @@ export default {
             axisLine: {
               show: true,
               lineStyle: {
-                color: '#ff6b6b',
+                color: mainColor,
                 width: 2
               }
             },
             axisLabel: {
-              color: '#fff',
+              color: theme.value === 'light' ? '#333' : '#fff',
               fontSize: 13,
               fontWeight: 'bold',
               formatter: function(value) {
                 return value.toFixed(3) + '%'
               },
-              backgroundColor: 'rgba(255, 107, 107, 0.2)',
+              backgroundColor: mainColor + (theme.value === 'light' ? '33' : '33'),
               borderRadius: 4,
               padding: [4, 8]
             },
             splitLine: {
               lineStyle: {
-                color: 'rgba(255, 255, 255, 0.15)',
+                color: theme.value === 'light' ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.15)',
                 type: 'dashed'
               }
             }
@@ -694,29 +785,29 @@ export default {
             bottom: 10,
             handleSize: '80%',
             textStyle: {
-              color: '#999'
+              color: colors.axisLabel
             }
           }
         ],
         series: [
           {
-            name: 'CNY 涨跌幅',
+            name: `${currencyName} 涨跌幅`,
             type: 'line',
-            data: cnyChangeRate,
+            data: changeRate,
             smooth: true,
             symbol: 'circle',
             symbolSize: 8,
             lineStyle: {
               width: 4,
-              color: '#ff6b6b'
+              color: mainColor
             },
             itemStyle: {
-              color: '#ff6b6b'
+              color: mainColor
             },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: 'rgba(255, 107, 107, 0.5)' },
-                { offset: 1, color: 'rgba(255, 107, 107, 0.05)' }
+                { offset: 0, color: mainColor + '80' },
+                { offset: 1, color: mainColor + '0D' }
               ])
             },
             markLine: {
@@ -725,17 +816,17 @@ export default {
                 {
                   yAxis: 0,
                   lineStyle: {
-                    color: '#fff',
+                    color: theme.value === 'light' ? '#666' : '#fff',
                     type: 'dashed',
                     width: 2
                   },
                   label: {
                     show: true,
                     formatter: '基准线 0%',
-                    color: '#fff',
+                    color: theme.value === 'light' ? '#666' : '#fff',
                     fontSize: 12,
                     fontWeight: 'bold',
-                    backgroundColor: 'rgba(136, 136, 136, 0.5)',
+                    backgroundColor: theme.value === 'light' ? 'rgba(200, 200, 200, 0.5)' : 'rgba(136, 136, 136, 0.5)',
                     padding: [4, 8],
                     borderRadius: 4
                   }
@@ -744,10 +835,10 @@ export default {
             },
             markPoint: {
               data: [
-                { 
-                  type: 'max', 
-                  name: '最大涨幅', 
-                  itemStyle: { color: '#4ade80' },
+                {
+                  type: 'max',
+                  name: '最大涨幅',
+                  itemStyle: { color: colors.upColor },
                   label: {
                     color: '#fff',
                     fontSize: 12,
@@ -755,15 +846,15 @@ export default {
                     formatter: function(params) {
                       return params.value.toFixed(3) + '%'
                     },
-                    backgroundColor: 'rgba(74, 222, 128, 0.3)',
+                    backgroundColor: colors.upColor + '4D',
                     padding: [4, 8],
                     borderRadius: 4
                   }
                 },
-                { 
-                  type: 'min', 
-                  name: '最大跌幅', 
-                  itemStyle: { color: '#ff6b6b' },
+                {
+                  type: 'min',
+                  name: '最大跌幅',
+                  itemStyle: { color: colors.downColor },
                   label: {
                     color: '#fff',
                     fontSize: 12,
@@ -771,7 +862,7 @@ export default {
                     formatter: function(params) {
                       return params.value.toFixed(3) + '%'
                     },
-                    backgroundColor: 'rgba(255, 107, 107, 0.3)',
+                    backgroundColor: colors.downColor + '4D',
                     padding: [4, 8],
                     borderRadius: 4
                   }
@@ -786,42 +877,43 @@ export default {
     const getRateOption = (data) => {
       const rateData = data.prices.map(p => p.exchangeRate)
       const rateChangeRate = calculateChangeRate(rateData)
-      
+      const colors = getThemeColors()
+
       return {
-        backgroundColor: 'transparent',
+        backgroundColor: colors.bg,
         title: {
           text: 'USD/CNY 汇率走势',
           subtext: '通过金价计算的隐含汇率变化 (×100)',
           left: 'center',
           top: 10,
           textStyle: {
-            color: '#e6a23c',
+            color: colors.title,
             fontSize: 18,
             fontWeight: 'bold'
           },
           subtextStyle: {
-            color: '#888',
+            color: colors.subtext,
             fontSize: 12
           }
         },
         tooltip: {
           trigger: 'axis',
-          backgroundColor: 'rgba(30, 30, 40, 0.95)',
-          borderColor: '#e6a23c',
+          backgroundColor: colors.tooltipBg,
+          borderColor: colors.tooltipBorder,
           borderWidth: 1,
           textStyle: {
-            color: '#fff'
+            color: colors.tooltipText
           },
           formatter: function(params) {
             const item = params[0]
             const rate = rateData[item.dataIndex]
             const changeIcon = item.value >= 0 ? '↗' : '↘'
-            const changeColor = item.value >= 0 ? '#4ade80' : '#ff6b6b'
+            const changeColor = item.value >= 0 ? colors.upColor : colors.downColor
             return `<div style="font-weight:bold;margin-bottom:5px;">${item.axisValue}</div>
-              <div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:rgba(255,255,255,0.05);border-radius:4px;">
-                <span style="display:inline-block;width:10px;height:10px;background:#00d4ff;border-radius:50%;margin-right:8px;"></span>
+              <div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:${theme.value === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'};border-radius:4px;">
+                <span style="display:inline-block;width:10px;height:10px;background:${colors.rateColor};border-radius:50%;margin-right:8px;"></span>
                 <span style="flex:1;">USD/CNY 汇率</span>
-                <span style="margin-right:10px;color:#ccc;">${rate.toFixed(4)}</span>
+                <span style="margin-right:10px;color:${colors.axisLabel};">${rate.toFixed(4)}</span>
                 <span style="color:${changeColor};font-weight:bold;">${changeIcon} ${item.value >= 0 ? '+' : ''}${item.value.toFixed(3)}%</span>
               </div>`
           }
@@ -830,7 +922,7 @@ export default {
           data: ['汇率涨跌幅'],
           top: 60,
           textStyle: {
-            color: '#ccc'
+            color: colors.legend
           }
         },
         grid: {
@@ -849,11 +941,11 @@ export default {
           }),
           axisLine: {
             lineStyle: {
-              color: '#666'
+              color: colors.axisLine
             }
           },
           axisLabel: {
-            color: '#999',
+            color: colors.axisLabel,
             rotate: 45,
             fontSize: 11
           }
@@ -865,16 +957,16 @@ export default {
             position: 'left',
             axisLine: {
               lineStyle: {
-                color: '#00d4ff'
+                color: colors.rateColor
               }
             },
             axisLabel: {
-              color: '#00d4ff',
+              color: colors.rateColor,
               formatter: '{value}%'
             },
             splitLine: {
               lineStyle: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                color: colors.splitLine
               }
             }
           }
@@ -892,7 +984,7 @@ export default {
             bottom: 10,
             handleSize: '80%',
             textStyle: {
-              color: '#999'
+              color: colors.axisLabel
             }
           }
         ],
@@ -906,15 +998,15 @@ export default {
             symbolSize: 6,
             lineStyle: {
               width: 3,
-              color: '#00d4ff'
+              color: colors.rateColor
             },
             itemStyle: {
-              color: '#00d4ff'
+              color: colors.rateColor
             },
             areaStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: 'rgba(0, 212, 255, 0.4)' },
-                { offset: 1, color: 'rgba(0, 212, 255, 0.05)' }
+                { offset: 0, color: colors.rateColor + '66' },
+                { offset: 1, color: colors.rateColor + '0D' }
               ])
             },
             markLine: {
@@ -923,7 +1015,7 @@ export default {
                 {
                   yAxis: 0,
                   lineStyle: {
-                    color: '#888',
+                    color: colors.axisLabel,
                     type: 'dashed',
                     width: 1
                   },
@@ -941,10 +1033,11 @@ export default {
     const getCompareOption = (data) => {
       const usdData = data.series[0]?.data || []
       const cnyData = data.series[1]?.data || []
-      
+      const colors = getThemeColors()
+
       const sampleCount = Math.min(12, usdData.length)
       const step = Math.floor(usdData.length / sampleCount)
-      
+
       const sampledData = []
       for (let i = 0; i < sampleCount; i++) {
         const index = Math.min(i * step, usdData.length - 1)
@@ -955,21 +1048,21 @@ export default {
           cny: cnyData[index]
         })
       }
-      
+
       return {
-        backgroundColor: 'transparent',
+        backgroundColor: colors.bg,
         title: {
           text: '黄金价格时段对比',
           subtext: '采样显示不同时段的价格对比',
           left: 'center',
           top: 10,
           textStyle: {
-            color: '#e6a23c',
+            color: colors.title,
             fontSize: 18,
             fontWeight: 'bold'
           },
           subtextStyle: {
-            color: '#888',
+            color: colors.subtext,
             fontSize: 12
           }
         },
@@ -978,17 +1071,17 @@ export default {
           axisPointer: {
             type: 'shadow'
           },
-          backgroundColor: 'rgba(30, 30, 40, 0.95)',
-          borderColor: '#e6a23c',
+          backgroundColor: colors.tooltipBg,
+          borderColor: colors.tooltipBorder,
           borderWidth: 1,
           textStyle: {
-            color: '#fff'
+            color: colors.tooltipText
           },
           formatter: function(params) {
             let result = `<div style="font-weight:bold;margin-bottom:5px;">${params[0].axisValue}</div>`
             params.forEach((item) => {
-              const color = item.seriesName.includes('USD') ? '#ffd700' : '#ff6b6b'
-              result += `<div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:rgba(255,255,255,0.05);border-radius:4px;">
+              const color = item.seriesName.includes('USD') ? colors.usdColor : colors.cnyColor
+              result += `<div style="display:flex;align-items:center;margin:5px 0;padding:5px;background:${theme.value === 'light' ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)'};border-radius:4px;">
                 <span style="display:inline-block;width:10px;height:10px;background:${color};border-radius:50%;margin-right:8px;"></span>
                 <span style="flex:1;">${item.seriesName}</span>
                 <span style="color:${color};font-weight:bold;">${item.value.toFixed(2)}</span>
@@ -1001,7 +1094,7 @@ export default {
           data: ['USD 价格', 'CNY 价格'],
           top: 60,
           textStyle: {
-            color: '#ccc'
+            color: colors.legend
           }
         },
         grid: {
@@ -1016,11 +1109,11 @@ export default {
           data: sampledData.map(d => d.time),
           axisLine: {
             lineStyle: {
-              color: '#666'
+              color: colors.axisLine
             }
           },
           axisLabel: {
-            color: '#999',
+            color: colors.axisLabel,
             fontSize: 11
           }
         },
@@ -1031,15 +1124,15 @@ export default {
             position: 'left',
             axisLine: {
               lineStyle: {
-                color: '#ffd700'
+                color: colors.usdColor
               }
             },
             axisLabel: {
-              color: '#ffd700'
+              color: colors.usdColor
             },
             splitLine: {
               lineStyle: {
-                color: 'rgba(255, 255, 255, 0.1)'
+                color: colors.splitLine
               }
             }
           },
@@ -1049,11 +1142,11 @@ export default {
             position: 'right',
             axisLine: {
               lineStyle: {
-                color: '#ff6b6b'
+                color: colors.cnyColor
               }
             },
             axisLabel: {
-              color: '#ff6b6b'
+              color: colors.cnyColor
             },
             splitLine: {
               show: false
@@ -1074,8 +1167,8 @@ export default {
             data: sampledData.map(d => d.usd),
             itemStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#ffd700' },
-                { offset: 1, color: '#b8860b' }
+                { offset: 0, color: colors.usdColor },
+                { offset: 1, color: theme.value === 'light' ? '#b8860b' : '#b8860b' }
               ]),
               borderRadius: [4, 4, 0, 0]
             },
@@ -1088,8 +1181,8 @@ export default {
             data: sampledData.map(d => d.cny),
             itemStyle: {
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#ff6b6b' },
-                { offset: 1, color: '#c0392b' }
+                { offset: 0, color: colors.cnyColor },
+                { offset: 1, color: theme.value === 'light' ? '#c0392b' : '#c0392b' }
               ]),
               borderRadius: [4, 4, 0, 0]
             },
@@ -1128,17 +1221,31 @@ export default {
         updateChart(chartData.value)
       }
     }
-    
+
+    const switchCurrency = (curr) => {
+      currency.value = curr
+      if (chartData.value) {
+        updateChart(chartData.value)
+      }
+    }
+
+    const toggleTheme = () => {
+      theme.value = theme.value === 'dark' ? 'light' : 'dark'
+      if (chartData.value) {
+        updateChart(chartData.value)
+      }
+    }
+
     onMounted(() => {
       initChart()
       selectQuickDay(0)
     })
-    
+
     onUnmounted(() => {
       window.removeEventListener('resize', handleResize)
       chartInstance.value?.dispose()
     })
-    
+
     return {
       chartRef,
       startDate,
@@ -1149,11 +1256,15 @@ export default {
       quickDays,
       selectedQuickDay,
       chartType,
+      currency,
+      theme,
       stats,
       selectQuickDay,
       onDateChange,
       fetchData,
-      switchChartType
+      switchChartType,
+      switchCurrency,
+      toggleTheme
     }
   }
 }
@@ -1168,9 +1279,22 @@ export default {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.gold-chart-container.light-theme {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .header {
+  margin-bottom: 20px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
@@ -1178,8 +1302,93 @@ export default {
   text-align: center;
   color: #e6a23c;
   font-size: 28px;
-  margin-bottom: 20px;
   text-shadow: 0 2px 4px rgba(230, 162, 60, 0.3);
+  flex: 1;
+}
+
+.light-theme .title {
+  color: #d4a017;
+  text-shadow: 0 2px 4px rgba(212, 161, 23, 0.2);
+}
+
+.btn-theme {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: #2a2a3e;
+  border: 2px solid #444;
+  border-radius: 8px;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-theme:hover {
+  border-color: #e6a23c;
+  color: #e6a23c;
+}
+
+.light-theme .btn-theme {
+  background: #fff;
+  border-color: #ddd;
+  color: #666;
+}
+
+.light-theme .btn-theme:hover {
+  border-color: #d4a017;
+  color: #d4a017;
+}
+
+.currency-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-currency {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: #2a2a3e;
+  border: 2px solid #444;
+  border-radius: 8px;
+  color: #ccc;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-currency:hover {
+  border-color: #e6a23c;
+  color: #e6a23c;
+}
+
+.btn-currency.active {
+  background: linear-gradient(135deg, #e6a23c 0%, #d4a017 100%);
+  border-color: #e6a23c;
+  color: #1a1a2e;
+  font-weight: bold;
+}
+
+.light-theme .btn-currency {
+  background: #fff;
+  border-color: #ddd;
+  color: #666;
+}
+
+.light-theme .btn-currency:hover {
+  border-color: #d4a017;
+  color: #d4a017;
+}
+
+.light-theme .btn-currency.active {
+  background: linear-gradient(135deg, #d4a017 0%, #b8860b 100%);
+  border-color: #d4a017;
+  color: #fff;
 }
 
 .date-controls {
@@ -1202,6 +1411,10 @@ export default {
   font-size: 14px;
 }
 
+.light-theme .date-selector label {
+  color: #666;
+}
+
 .date-selector input[type="date"] {
   padding: 8px 12px;
   border: 1px solid #444;
@@ -1215,6 +1428,16 @@ export default {
 
 .date-selector input[type="date"]:focus {
   border-color: #e6a23c;
+}
+
+.light-theme .date-selector input[type="date"] {
+  background: #fff;
+  border-color: #ddd;
+  color: #333;
+}
+
+.light-theme .date-selector input[type="date"]:focus {
+  border-color: #d4a017;
 }
 
 .btn-query {
@@ -1271,6 +1494,23 @@ export default {
   font-weight: bold;
 }
 
+.light-theme .btn-chart-type {
+  background: #fff;
+  border-color: #ddd;
+  color: #666;
+}
+
+.light-theme .btn-chart-type:hover {
+  border-color: #d4a017;
+  color: #d4a017;
+}
+
+.light-theme .btn-chart-type.active {
+  background: linear-gradient(135deg, #d4a017 0%, #b8860b 100%);
+  border-color: #d4a017;
+  color: #fff;
+}
+
 .btn-chart-type .icon {
   font-size: 18px;
 }
@@ -1305,12 +1545,33 @@ export default {
   font-weight: bold;
 }
 
+.light-theme .btn-quick {
+  background: #fff;
+  border-color: #ddd;
+  color: #666;
+}
+
+.light-theme .btn-quick:hover {
+  border-color: #d4a017;
+  color: #d4a017;
+}
+
+.light-theme .btn-quick.active {
+  background: #d4a017;
+  border-color: #d4a017;
+  color: #fff;
+}
+
 .chart-wrapper {
   position: relative;
   background: rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   padding: 15px;
   min-height: 450px;
+}
+
+.light-theme .chart-wrapper {
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .chart {
@@ -1333,6 +1594,11 @@ export default {
   color: #e6a23c;
 }
 
+.light-theme .loading-overlay {
+  background: rgba(245, 247, 250, 0.9);
+  color: #d4a017;
+}
+
 .spinner {
   width: 40px;
   height: 40px;
@@ -1341,6 +1607,11 @@ export default {
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 15px;
+}
+
+.light-theme .spinner {
+  border-color: rgba(212, 160, 23, 0.3);
+  border-top-color: #d4a017;
 }
 
 @keyframes spin {
@@ -1376,6 +1647,10 @@ export default {
   border-radius: 12px;
 }
 
+.light-theme .stats-panel {
+  background: rgba(255, 255, 255, 0.5);
+}
+
 .stat-item {
   display: flex;
   flex-direction: column;
@@ -1386,6 +1661,11 @@ export default {
   transition: transform 0.3s;
 }
 
+.light-theme .stat-item {
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .stat-item:hover {
   transform: translateY(-3px);
 }
@@ -1394,6 +1674,10 @@ export default {
   font-size: 12px;
   color: #999;
   margin-bottom: 8px;
+}
+
+.light-theme .stat-label {
+  color: #666;
 }
 
 .stat-value {
@@ -1439,9 +1723,30 @@ export default {
     border-radius: 12px;
   }
 
+  .header-top {
+    flex-direction: column;
+    gap: 10px;
+  }
+
   .title {
     font-size: 20px;
+    margin-bottom: 0;
+  }
+
+  .btn-theme {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .currency-switcher {
+    gap: 10px;
     margin-bottom: 15px;
+  }
+
+  .btn-currency {
+    padding: 8px 16px;
+    font-size: 13px;
+    flex: 1;
   }
 
   .chart-type-switcher {
@@ -1537,6 +1842,20 @@ export default {
 
   .title {
     font-size: 18px;
+  }
+
+  .btn-theme {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .currency-switcher {
+    gap: 8px;
+  }
+
+  .btn-currency {
+    padding: 6px 10px;
+    font-size: 11px;
   }
 
   .chart-type-switcher {
