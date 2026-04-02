@@ -50,10 +50,10 @@ module.exports = defineConfig({
         
         <!-- Vue Router history 模式支持 -->
         <rule name="Handle History Mode and Custom 404/500" stopProcessing="true">
-          <match url="(.*)" />
+          <match url="^(.*)$" />
           <conditions logicalGrouping="MatchAll">
-            <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negated="true" />
-            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negated="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsFile" ignoreCase="false" negate="true" />
+            <add input="{REQUEST_FILENAME}" matchType="IsDirectory" ignoreCase="false" negate="true" />
           </conditions>
           <action type="Rewrite" url="/index.html" />
         </rule>
