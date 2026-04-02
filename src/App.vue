@@ -61,4 +61,46 @@ body {
   text-shadow: 0 2px 4px rgba(230, 162, 60, 0.3);
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+  }
+
+  .logo-container {
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+  }
+
+  .app-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 8px;
+  }
+
+  .logo-container {
+    margin-bottom: 8px;
+    padding: 8px;
+  }
+
+  .logo {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 8px;
+  }
+
+  .app-title {
+    font-size: 16px;
+  }
+}
 </style>

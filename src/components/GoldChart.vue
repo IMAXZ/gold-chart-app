@@ -1435,20 +1435,160 @@ export default {
 
 @media (max-width: 768px) {
   .gold-chart-container {
-    padding: 15px;
+    padding: 12px;
+    border-radius: 12px;
   }
-  
+
   .title {
-    font-size: 22px;
+    font-size: 20px;
+    margin-bottom: 15px;
   }
-  
+
+  .chart-type-switcher {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+  }
+
+  .btn-chart-type {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex: 1;
+    min-width: 70px;
+    justify-content: center;
+  }
+
+  .btn-chart-type .icon {
+    font-size: 14px;
+  }
+
   .date-controls {
     flex-direction: column;
     gap: 10px;
+    margin-bottom: 12px;
   }
-  
+
+  .date-selector {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .date-selector label {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .date-selector input[type="date"] {
+    flex: 1;
+    max-width: 160px;
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+
+  .btn-query {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .quick-select {
+    gap: 6px;
+  }
+
+  .btn-quick {
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .chart-wrapper {
+    padding: 10px;
+    min-height: 300px;
+  }
+
   .chart {
-    height: 350px;
+    height: 300px;
+  }
+
+  .stats-panel {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 12px;
+    margin-top: 15px;
+  }
+
+  .stat-item {
+    padding: 10px 8px;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+
+  .stat-value {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .gold-chart-container {
+    padding: 10px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .chart-type-switcher {
+    gap: 6px;
+  }
+
+  .btn-chart-type {
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: 60px;
+  }
+
+  .btn-chart-type .icon {
+    font-size: 12px;
+    margin-right: 4px;
+  }
+
+  .date-selector label {
+    font-size: 12px;
+  }
+
+  .date-selector input[type="date"] {
+    max-width: 140px;
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+
+  .chart-wrapper {
+    padding: 8px;
+    min-height: 250px;
+  }
+
+  .chart {
+    height: 250px;
+  }
+
+  .stats-panel {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .stat-item {
+    padding: 8px 6px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+  }
+
+  .stat-value {
+    font-size: 14px;
   }
 }
 </style>
