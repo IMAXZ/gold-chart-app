@@ -205,6 +205,7 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import * as echarts from 'echarts'
 import axios from 'axios'
+import apiConfig from '@/config/api.js'
 
 export default {
   name: 'GoldChart',
@@ -328,7 +329,7 @@ export default {
       
       try {
         const response = await axios.get(
-          `http://localhost:41736/api/prices`,
+          `${apiConfig.baseURL}${apiConfig.endpoints.prices}`,
           {
             params: {
               startDate: startDate.value,
