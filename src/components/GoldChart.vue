@@ -532,6 +532,8 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
+          triggerOn: 'mousemove|click',
+          showDelay: 0,
           backgroundColor: colors.tooltipBg,
           borderColor: colors.tooltipBorder,
           borderWidth: 1,
@@ -539,9 +541,16 @@ export default {
             color: colors.tooltipText
           },
           axisPointer: {
-            type: 'cross',
-            crossStyle: {
-              color: colors.axisLabel
+            type: 'line',
+            snap: true,
+            lineStyle: {
+              color: mainColor,
+              width: 1,
+              type: 'dashed'
+            },
+            label: {
+              show: true,
+              backgroundColor: mainColor
             }
           },
           formatter: function(params) {
@@ -591,6 +600,17 @@ export default {
             type: 'value',
             name: currencyName,
             position: 'left',
+            scale: true,
+            min: function(value) {
+              const range = value.max - value.min
+              const padding = range * 0.1 || 1
+              return Math.floor((value.min - padding) * 100) / 100
+            },
+            max: function(value) {
+              const range = value.max - value.min
+              const padding = range * 0.1 || 1
+              return Math.ceil((value.max + padding) * 100) / 100
+            },
             axisLine: {
               lineStyle: {
                 color: mainColor
@@ -598,7 +618,9 @@ export default {
             },
             axisLabel: {
               color: mainColor,
-              formatter: '{value}'
+              formatter: function(value) {
+                return value.toFixed(2)
+              }
             },
             splitLine: {
               lineStyle: {
@@ -611,7 +633,8 @@ export default {
           {
             type: 'inside',
             start: 0,
-            end: 100
+            end: 100,
+            throttle: 50
           },
           {
             start: 0,
@@ -630,8 +653,18 @@ export default {
             type: 'line',
             data: priceData,
             smooth: true,
+            showSymbol: false,
             symbol: 'circle',
-            symbolSize: 6,
+            symbolSize: 8,
+            emphasis: {
+              scale: true,
+              itemStyle: {
+                borderWidth: 3,
+                borderColor: '#fff',
+                shadowBlur: 10,
+                shadowColor: mainColor
+              }
+            },
             lineStyle: {
               width: 3,
               color: mainColor
@@ -677,6 +710,8 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
+          triggerOn: 'mousemove|click',
+          showDelay: 0,
           backgroundColor: colors.tooltipBg,
           borderColor: colors.tooltipBorder,
           borderWidth: 1,
@@ -684,9 +719,16 @@ export default {
             color: colors.tooltipText
           },
           axisPointer: {
-            type: 'cross',
-            crossStyle: {
-              color: colors.axisLabel
+            type: 'line',
+            snap: true,
+            lineStyle: {
+              color: mainColor,
+              width: 1,
+              type: 'dashed'
+            },
+            label: {
+              show: true,
+              backgroundColor: mainColor
             }
           },
           formatter: function(params) {
@@ -776,7 +818,8 @@ export default {
           {
             type: 'inside',
             start: 0,
-            end: 100
+            end: 100,
+            throttle: 50
           },
           {
             start: 0,
@@ -795,8 +838,18 @@ export default {
             type: 'line',
             data: changeRate,
             smooth: true,
+            showSymbol: false,
             symbol: 'circle',
             symbolSize: 8,
+            emphasis: {
+              scale: true,
+              itemStyle: {
+                borderWidth: 3,
+                borderColor: '#fff',
+                shadowBlur: 10,
+                shadowColor: mainColor
+              }
+            },
             lineStyle: {
               width: 4,
               color: mainColor
@@ -898,11 +951,26 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
+          triggerOn: 'mousemove|click',
+          showDelay: 0,
           backgroundColor: colors.tooltipBg,
           borderColor: colors.tooltipBorder,
           borderWidth: 1,
           textStyle: {
             color: colors.tooltipText
+          },
+          axisPointer: {
+            type: 'line',
+            snap: true,
+            lineStyle: {
+              color: colors.rateColor,
+              width: 1,
+              type: 'dashed'
+            },
+            label: {
+              show: true,
+              backgroundColor: colors.rateColor
+            }
           },
           formatter: function(params) {
             const item = params[0]
@@ -975,7 +1043,8 @@ export default {
           {
             type: 'inside',
             start: 0,
-            end: 100
+            end: 100,
+            throttle: 50
           },
           {
             start: 0,
@@ -994,8 +1063,18 @@ export default {
             type: 'line',
             data: rateChangeRate,
             smooth: true,
+            showSymbol: false,
             symbol: 'circle',
-            symbolSize: 6,
+            symbolSize: 8,
+            emphasis: {
+              scale: true,
+              itemStyle: {
+                borderWidth: 3,
+                borderColor: '#fff',
+                shadowBlur: 10,
+                shadowColor: colors.rateColor
+              }
+            },
             lineStyle: {
               width: 3,
               color: colors.rateColor
@@ -1068,6 +1147,8 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
+          triggerOn: 'mousemove|click',
+          showDelay: 0,
           axisPointer: {
             type: 'shadow'
           },
@@ -1122,6 +1203,17 @@ export default {
             type: 'value',
             name: 'USD',
             position: 'left',
+            scale: true,
+            min: function(value) {
+              const range = value.max - value.min
+              const padding = range * 0.1 || 1
+              return Math.floor((value.min - padding) * 100) / 100
+            },
+            max: function(value) {
+              const range = value.max - value.min
+              const padding = range * 0.1 || 1
+              return Math.ceil((value.max + padding) * 100) / 100
+            },
             axisLine: {
               lineStyle: {
                 color: colors.usdColor
@@ -1140,6 +1232,17 @@ export default {
             type: 'value',
             name: 'CNY',
             position: 'right',
+            scale: true,
+            min: function(value) {
+              const range = value.max - value.min
+              const padding = range * 0.1 || 1
+              return Math.floor((value.min - padding) * 100) / 100
+            },
+            max: function(value) {
+              const range = value.max - value.min
+              const padding = range * 0.1 || 1
+              return Math.ceil((value.max + padding) * 100) / 100
+            },
             axisLine: {
               lineStyle: {
                 color: colors.cnyColor
@@ -1157,7 +1260,8 @@ export default {
           {
             type: 'inside',
             start: 0,
-            end: 100
+            end: 100,
+            throttle: 50
           }
         ],
         series: [
