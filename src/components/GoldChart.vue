@@ -90,6 +90,17 @@
           {{ day.label }}
         </button>
       </div>
+      <div class="granularity-switcher">
+        <span class="granularity-label">颗粒度：</span>
+        <button
+          v-for="opt in granularityOptions"
+          :key="opt.value"
+          :class="['btn-granularity', { active: granularity === opt.value }]"
+          @click="switchGranularity(opt.value)"
+        >
+          {{ opt.label }}
+        </button>
+      </div>
     </div>
     
     <div class="chart-wrapper">
@@ -306,6 +317,7 @@ export default {
     const chartType = ref('price')
     const currency = ref('USD')
     const theme = ref('dark')
+    const granularity = ref(1)
     
     const today = computed(() => {
       return new Date().toISOString().split('T')[0]
@@ -317,6 +329,15 @@ export default {
       { label: '近3天', value: 3 },
       { label: '近7天', value: 7 },
       { label: '近30天', value: 30 }
+    ]
+    
+    const granularityOptions = [
+      { label: '1分钟', value: 1 },
+      { label: '5分钟', value: 5 },
+      { label: '10分钟', value: 10 },
+      { label: '15分钟', value: 15 },
+      { label: '30分钟', value: 30 },
+      { label: '1小时', value: 60 }
     ]
     
     const stats = computed(() => {
@@ -459,6 +480,69 @@ export default {
       }
     }
     
+    const aggregateByGranularity = (data) => {
+      if (!data || !data.prices || data.prices.length === 0) return data
+      const minutes = granularity.value
+      if (minutes <= 1) return data
+
+      const prices = data.prices
+      const buckets = []
+      let bucketStart = new Date(prices[0].createdAt).getTime()
+      let bucket = []
+
+      for (let i = 0; i < prices.length; i++) {
+        const t = new Date(prices[i].createdAt).getTime()
+        if (t - bucketStart >= minutes * 60 * 1000 && bucket.length > 0) {
+          buckets.push(bucket)
+          bucket = []
+          bucketStart = t
+        }
+        bucket.push(prices[i])
+      }
+      if (bucket.length > 0) {
+        buckets.push(bucket)
+      }
+
+      const aggregated = buckets.map(b => {
+        const last = b[b.length - 1]
+        const usdAvg = b.reduce((s, p) => s + p.priceUsd, 0) / b.length
+        const cnyAvg = b.reduce((s, p) => s + p.priceCny, 0) / b.length
+        const rateAvg = b.reduce((s, p) => s + p.exchangeRate, 0) / b.length
+        return {
+          createdAt: last.createdAt,
+          priceUsd: usdAvg,
+          priceCny: cnyAvg,
+          exchangeRate: rateAvg
+        }
+      })
+
+      return {
+        series: [
+          {
+            name: '黄金价格 (USD)',
+            type: 'line',
+            data: aggregated.map(p => p.priceUsd),
+            yaxisIndex: 0
+          },
+          {
+            name: '黄金价格 (CNY)',
+            type: 'line',
+            data: aggregated.map(p => p.priceCny),
+            yaxisIndex: 1
+          }
+        ],
+        xaxis: aggregated.map(p => p.createdAt),
+        prices: aggregated
+      }
+    }
+
+    const switchGranularity = (minutes) => {
+      granularity.value = minutes
+      if (chartData.value) {
+        updateChart(aggregateByGranularity(chartData.value))
+      }
+    }
+
     const calculateChangeRate = (data) => {
       if (!data || data.length < 2) return data
       const baseValue = data[0]
@@ -1299,22 +1383,23 @@ export default {
     const updateChart = (data) => {
       if (!chartInstance.value || !data) return
       
+      const displayData = aggregateByGranularity(data)
       let option
       switch (chartType.value) {
         case 'price':
-          option = getPriceOption(data)
+          option = getPriceOption(displayData)
           break
         case 'trend':
-          option = getTrendOption(data)
+          option = getTrendOption(displayData)
           break
         case 'rate':
-          option = getRateOption(data)
+          option = getRateOption(displayData)
           break
         case 'compare':
-          option = getCompareOption(data)
+          option = getCompareOption(displayData)
           break
         default:
-          option = getPriceOption(data)
+          option = getPriceOption(displayData)
       }
       chartInstance.value.setOption(option, true)
     }
@@ -1362,12 +1447,15 @@ export default {
       chartType,
       currency,
       theme,
+      granularity,
+      granularityOptions,
       stats,
       selectQuickDay,
       onDateChange,
       fetchData,
       switchChartType,
       switchCurrency,
+      switchGranularity,
       toggleTheme
     }
   }
@@ -1666,6 +1754,65 @@ export default {
   color: #fff;
 }
 
+.granularity-switcher {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.granularity-label {
+  color: #999;
+  font-size: 13px;
+  margin-right: 4px;
+}
+
+.light-theme .granularity-label {
+  color: #666;
+}
+
+.btn-granularity {
+  padding: 4px 12px;
+  background: #2a2a3e;
+  border: 1px solid #444;
+  border-radius: 16px;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 12px;
+}
+
+.btn-granularity:hover {
+  border-color: #e6a23c;
+  color: #e6a23c;
+}
+
+.btn-granularity.active {
+  background: #e6a23c;
+  border-color: #e6a23c;
+  color: #1a1a2e;
+  font-weight: bold;
+}
+
+.light-theme .btn-granularity {
+  background: #fff;
+  border-color: #ddd;
+  color: #666;
+}
+
+.light-theme .btn-granularity:hover {
+  border-color: #d4a017;
+  color: #d4a017;
+}
+
+.light-theme .btn-granularity.active {
+  background: #d4a017;
+  border-color: #d4a017;
+  color: #fff;
+}
+
 .chart-wrapper {
   position: relative;
   background: rgba(0, 0, 0, 0.2);
@@ -1909,6 +2056,20 @@ export default {
     font-size: 12px;
   }
 
+  .granularity-switcher {
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .granularity-label {
+    font-size: 12px;
+  }
+
+  .btn-granularity {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+
   .chart-wrapper {
     padding: 10px;
     min-height: 300px;
@@ -1985,6 +2146,23 @@ export default {
     max-width: 140px;
     padding: 5px 8px;
     font-size: 12px;
+  }
+
+  .granularity-switcher {
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .granularity-label {
+    font-size: 11px;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2px;
+  }
+
+  .btn-granularity {
+    padding: 3px 8px;
+    font-size: 10px;
   }
 
   .chart-wrapper {
