@@ -58,7 +58,7 @@ body.gold-dashboard-light {
     radial-gradient(circle at 15% 20%, rgba(255,196,80,0.12), transparent 20%),
     radial-gradient(circle at 85% 18%, rgba(255,131,92,0.1), transparent 22%),
     linear-gradient(180deg, #fffaf1 0%, #f6eedf 45%, #fffdf8 100%);
-  color: #4a3412;
+  color: #36250a;
 }
 
 body.gold-dashboard-dark {
@@ -152,7 +152,7 @@ body.gold-dashboard-light .brand-mark {
 }
 
 body.gold-dashboard-light .hero-copy p {
-  color: rgba(74,52,18,0.72);
+  color: rgba(54,37,10,0.82);
 }
 
 .hero-kicker {
@@ -164,7 +164,7 @@ body.gold-dashboard-light .hero-copy p {
 }
 
 body.gold-dashboard-light .hero-kicker {
-  color: rgba(111,78,0,0.62);
+  color: rgba(98,67,10,0.8);
 }
 
 @media (max-width: 768px) {

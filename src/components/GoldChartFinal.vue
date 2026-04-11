@@ -350,7 +350,7 @@ export default {
 }
 
 .light-theme .chart-panel__label {
-  color: rgba(111, 78, 0, 0.64);
+  color: rgba(92, 65, 0, 0.82);
 }
 
 .light-theme .chart-panel__title {
@@ -358,9 +358,9 @@ export default {
 }
 
 .light-theme .chart-panel__badge {
-  color: #50390c;
-  background: rgba(255, 255, 255, 0.74);
-  border-color: rgba(170, 130, 40, 0.18);
+  color: #3f2b06;
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(170, 130, 40, 0.26);
 }
 
 .light-theme .chart-wrapper {
@@ -397,7 +397,7 @@ export default {
 .light-theme :deep(.card-title),
 .light-theme :deep(.stat-label),
 .light-theme :deep(.stat-helper) {
-  color: rgba(80, 57, 12, 0.66);
+  color: rgba(58, 40, 8, 0.88);
 }
 
 .light-theme :deep(.unit-pill),
@@ -405,15 +405,62 @@ export default {
 .light-theme :deep(.segmented-button),
 .light-theme :deep(.chip-button),
 .light-theme :deep(.glass-card) {
-  color: #50390c;
-  background: rgba(255, 255, 255, 0.74);
-  border-color: rgba(170, 130, 40, 0.18);
+  color: #3c2906;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(170, 130, 40, 0.24);
 }
 
 .light-theme :deep(.date-field input) {
-  background: rgba(255, 255, 255, 0.82);
-  color: #36270a;
-  border-color: rgba(170, 130, 40, 0.18);
+  background: rgba(255, 255, 255, 0.98);
+  color: #2f2108;
+  border-color: rgba(170, 130, 40, 0.26);
+}
+
+.light-theme :deep(.unit-pill),
+.light-theme :deep(.theme-button),
+.light-theme :deep(.segmented-button),
+.light-theme :deep(.chip-button) {
+  font-weight: 600;
+}
+
+.light-theme :deep(.theme-icon),
+.light-theme :deep(.segmented-icon) {
+  background: rgba(92, 65, 0, 0.12);
+  color: #5c4100;
+}
+
+.light-theme :deep(.query-button) {
+  color: #341f00;
+  box-shadow: 0 10px 24px rgba(255, 138, 91, 0.16);
+}
+
+.light-theme :deep(.stat-card) {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(170, 130, 40, 0.2);
+}
+
+.light-theme :deep(.stat-card--usd) {
+  background: linear-gradient(180deg, rgba(255, 214, 120, 0.38), rgba(255, 255, 255, 0.96));
+}
+
+.light-theme :deep(.stat-card--cny) {
+  background: linear-gradient(180deg, rgba(255, 167, 136, 0.34), rgba(255, 255, 255, 0.96));
+}
+
+.light-theme :deep(.stat-card--rate) {
+  background: linear-gradient(180deg, rgba(133, 226, 238, 0.34), rgba(255, 255, 255, 0.96));
+}
+
+.light-theme :deep(.stat-value) {
+  color: #2f2108;
+}
+
+.light-theme :deep(.stat-value.up) {
+  color: #c53030;
+}
+
+.light-theme :deep(.stat-value.down) {
+  color: #2f855a;
 }
 
 @keyframes spin {
