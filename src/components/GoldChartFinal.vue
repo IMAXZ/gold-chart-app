@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="gold-chart-scene" :class="{ 'light-theme': theme === 'light' }">
     <div class="scene-glow scene-glow--left"></div>
     <div class="scene-glow scene-glow--right"></div>
@@ -80,7 +80,7 @@ export default {
     const chartRef = ref(null)
     const chartInstance = ref(null)
     const chartType = ref('price')
-    const currency = ref('USD')
+    const currency = ref('CNY')
     const theme = ref('dark')
     const granularity = ref(1)
 
@@ -99,7 +99,7 @@ export default {
     } = useGoldChartFinalData()
 
     const displayData = computed(() => aggregateChartData(chartData.value, granularity.value))
-    const unitLabel = computed(() => UNIT_LABELS[currency.value] || UNIT_LABELS.USD)
+    const unitLabel = computed(() => UNIT_LABELS[currency.value] || UNIT_LABELS.CNY)
     const chartTitle = computed(() => CHART_TITLES[chartType.value] || CHART_TITLES.price)
 
     const renderChart = () => {
@@ -116,6 +116,11 @@ export default {
         }),
         true
       )
+    }
+
+    const syncThemeToBody = () => {
+      document.body.classList.toggle('gold-dashboard-light', theme.value === 'light')
+      document.body.classList.toggle('gold-dashboard-dark', theme.value === 'dark')
     }
 
     const loadData = async () => {
@@ -153,6 +158,7 @@ export default {
 
     const toggleTheme = () => {
       theme.value = theme.value === 'dark' ? 'light' : 'dark'
+      syncThemeToBody()
       renderChart()
     }
 
@@ -166,11 +172,13 @@ export default {
         window.addEventListener('resize', handleResize)
       }
 
+      syncThemeToBody()
       await handleQuickDaySelection(0)
     })
 
     onUnmounted(() => {
       window.removeEventListener('resize', handleResize)
+      document.body.classList.remove('gold-dashboard-light', 'gold-dashboard-dark')
       chartInstance.value?.dispose()
     })
 
@@ -223,7 +231,7 @@ export default {
   left: -60px;
   width: 220px;
   height: 220px;
-  background: rgba(255,184,0,0.18);
+  background: rgba(255, 184, 0, 0.18);
 }
 
 .scene-glow--right {
@@ -231,16 +239,17 @@ export default {
   top: 220px;
   width: 260px;
   height: 260px;
-  background: rgba(255,94,98,0.16);
+  background: rgba(255, 94, 98, 0.16);
 }
 
 .chart-panel {
   position: relative;
   padding: 22px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 28px;
-  background: linear-gradient(180deg, rgba(13,18,30,0.92), rgba(9,14,24,0.88));
-  box-shadow: 0 28px 64px rgba(2,6,23,0.38);
+  background: linear-gradient(180deg, rgba(13, 18, 30, 0.92), rgba(9, 14, 24, 0.88));
+  box-shadow: 0 28px 64px rgba(2, 6, 23, 0.38);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .chart-panel__meta {
@@ -256,7 +265,7 @@ export default {
   font-size: 12px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: rgba(255,236,194,0.62);
+  color: rgba(255, 236, 194, 0.62);
 }
 
 .chart-panel__title {
@@ -271,8 +280,8 @@ export default {
   border-radius: 999px;
   text-align: center;
   color: #fff1d1;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .chart-wrapper {
@@ -281,9 +290,10 @@ export default {
   padding: 18px;
   border-radius: 24px;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-    rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.08);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .chart {
@@ -305,13 +315,13 @@ export default {
 }
 
 .loading-overlay {
-  background: rgba(11,15,25,0.82);
+  background: rgba(11, 15, 25, 0.82);
   color: #fff1d1;
   backdrop-filter: blur(10px);
 }
 
 .error-message {
-  background: rgba(26,12,12,0.84);
+  background: rgba(26, 12, 12, 0.84);
   color: #ffd9d6;
 }
 
@@ -319,7 +329,7 @@ export default {
   width: 42px;
   height: 42px;
   border-radius: 999px;
-  border: 3px solid rgba(255,196,80,0.18);
+  border: 3px solid rgba(255, 196, 80, 0.18);
   border-top-color: #ffcf63;
   animation: spin 1s linear infinite;
 }
@@ -331,6 +341,79 @@ export default {
   background: #ff7a59;
   color: #fff;
   cursor: pointer;
+}
+
+.light-theme .chart-panel {
+  border-color: rgba(170, 130, 40, 0.18);
+  background: linear-gradient(180deg, rgba(255, 252, 245, 0.96), rgba(249, 243, 228, 0.94));
+  box-shadow: 0 24px 60px rgba(123, 96, 38, 0.16);
+}
+
+.light-theme .chart-panel__label {
+  color: rgba(111, 78, 0, 0.64);
+}
+
+.light-theme .chart-panel__title {
+  color: #5c4100;
+}
+
+.light-theme .chart-panel__badge {
+  color: #50390c;
+  background: rgba(255, 255, 255, 0.74);
+  border-color: rgba(170, 130, 40, 0.18);
+}
+
+.light-theme .chart-wrapper {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.52));
+  border-color: rgba(170, 130, 40, 0.12);
+}
+
+.light-theme .loading-overlay {
+  background: rgba(255, 250, 240, 0.88);
+  color: #5a4208;
+}
+
+.light-theme .spinner {
+  border-color: rgba(212, 154, 31, 0.18);
+  border-top-color: #d49a1f;
+}
+
+.light-theme :deep(.toolbar-shell) {
+  border-color: rgba(170, 130, 40, 0.18);
+  background:
+    radial-gradient(circle at top left, rgba(255, 187, 0, 0.12), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(244, 63, 94, 0.1), transparent 24%),
+    linear-gradient(180deg, rgba(255, 250, 240, 0.96), rgba(250, 245, 232, 0.94));
+  box-shadow: 0 24px 60px rgba(123, 96, 38, 0.16);
+}
+
+.light-theme :deep(.title) {
+  color: #5c4100;
+}
+
+.light-theme :deep(.subtitle),
+.light-theme :deep(.date-field span),
+.light-theme :deep(.section-label),
+.light-theme :deep(.card-title),
+.light-theme :deep(.stat-label),
+.light-theme :deep(.stat-helper) {
+  color: rgba(80, 57, 12, 0.66);
+}
+
+.light-theme :deep(.unit-pill),
+.light-theme :deep(.theme-button),
+.light-theme :deep(.segmented-button),
+.light-theme :deep(.chip-button),
+.light-theme :deep(.glass-card) {
+  color: #50390c;
+  background: rgba(255, 255, 255, 0.74);
+  border-color: rgba(170, 130, 40, 0.18);
+}
+
+.light-theme :deep(.date-field input) {
+  background: rgba(255, 255, 255, 0.82);
+  color: #36270a;
+  border-color: rgba(170, 130, 40, 0.18);
 }
 
 @keyframes spin {

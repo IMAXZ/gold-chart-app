@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="toolbar-shell">
     <div class="toolbar-top">
       <div class="title-block">
@@ -156,13 +156,14 @@ export default {
 .toolbar-shell {
   margin-bottom: 22px;
   padding: 28px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 28px;
   background:
-    radial-gradient(circle at top left, rgba(255,187,0,0.18), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(244,63,94,0.16), transparent 24%),
-    linear-gradient(180deg, rgba(18,24,39,0.92), rgba(12,18,31,0.88));
-  box-shadow: 0 24px 60px rgba(2,6,23,0.35);
+    radial-gradient(circle at top left, rgba(255, 187, 0, 0.18), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(244, 63, 94, 0.16), transparent 24%),
+    linear-gradient(180deg, rgba(18, 24, 39, 0.92), rgba(12, 18, 31, 0.88));
+  box-shadow: 0 24px 60px rgba(2, 6, 23, 0.35);
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .toolbar-top {
@@ -178,7 +179,7 @@ export default {
   font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: rgba(255,219,136,0.72);
+  color: rgba(255, 219, 136, 0.72);
 }
 
 .title {
@@ -190,7 +191,7 @@ export default {
 
 .subtitle {
   margin: 10px 0 0;
-  color: rgba(255,245,225,0.72);
+  color: rgba(255, 245, 225, 0.72);
   font-size: 14px;
 }
 
@@ -209,8 +210,8 @@ export default {
   min-height: 44px;
   padding: 0 16px;
   border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff3da;
   backdrop-filter: blur(16px);
 }
@@ -220,7 +221,7 @@ export default {
   height: 10px;
   border-radius: 999px;
   background: linear-gradient(135deg, #ffd86f, #ff8c5a);
-  box-shadow: 0 0 18px rgba(255,184,0,0.55);
+  box-shadow: 0 0 18px rgba(255, 184, 0, 0.55);
 }
 
 .theme-button {
@@ -233,7 +234,7 @@ export default {
 .chip-button:hover,
 .query-button:hover:not(:disabled) {
   transform: translateY(-1px);
-  border-color: rgba(255,196,80,0.45);
+  border-color: rgba(255, 196, 80, 0.45);
 }
 
 .theme-icon,
@@ -244,7 +245,7 @@ export default {
   width: 26px;
   height: 26px;
   border-radius: 999px;
-  background: rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.12);
   font-size: 12px;
   font-weight: 700;
 }
@@ -254,7 +255,7 @@ export default {
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255,236,194,0.72);
+  color: rgba(255, 236, 194, 0.72);
 }
 
 .section-label {
@@ -284,17 +285,17 @@ export default {
   align-items: center;
   gap: 10px;
   padding: 12px 18px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 18px;
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,248,235,0.8);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 248, 235, 0.8);
   cursor: pointer;
   transition: transform 0.22s ease, border-color 0.22s ease;
 }
 
 .segmented-button.active {
-  background: linear-gradient(135deg, rgba(255,210,107,0.24), rgba(255,122,89,0.22));
-  border-color: rgba(255,196,80,0.6);
+  background: linear-gradient(135deg, rgba(255, 210, 107, 0.24), rgba(255, 122, 89, 0.22));
+  border-color: rgba(255, 196, 80, 0.6);
   color: #fff8eb;
 }
 
@@ -310,9 +311,10 @@ export default {
 
 .glass-card {
   padding: 18px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 22px;
-  background: rgba(255,255,255,0.05);
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .date-grid {
@@ -325,16 +327,16 @@ export default {
 .date-field span {
   display: block;
   margin-bottom: 8px;
-  color: rgba(255,245,225,0.72);
+  color: rgba(255, 245, 225, 0.72);
   font-size: 13px;
 }
 
 .date-field input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
-  background: rgba(5,10,20,0.28);
+  background: rgba(5, 10, 20, 0.28);
   color: #fff;
   outline: none;
 }
@@ -342,7 +344,7 @@ export default {
 .query-button {
   width: 100%;
   min-height: 46px;
-  border: 1px solid rgba(255,196,80,0.36);
+  border: 1px solid rgba(255, 196, 80, 0.36);
   border-radius: 16px;
   background: linear-gradient(135deg, #ffcf63, #ff8a5b);
   color: #2f1800;
@@ -363,10 +365,10 @@ export default {
 
 .chip-button {
   padding: 10px 14px;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,248,235,0.82);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 248, 235, 0.82);
   cursor: pointer;
 }
 
@@ -375,8 +377,8 @@ export default {
 }
 
 .chip-button.active {
-  background: linear-gradient(135deg, rgba(255,212,115,0.22), rgba(69,208,227,0.18));
-  border-color: rgba(255,212,115,0.58);
+  background: linear-gradient(135deg, rgba(255, 212, 115, 0.22), rgba(69, 208, 227, 0.18));
+  border-color: rgba(255, 212, 115, 0.58);
   color: #fff8eb;
 }
 

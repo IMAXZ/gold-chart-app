@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="app-shell">
     <div class="ambient ambient--one"></div>
     <div class="ambient ambient--two"></div>
@@ -50,6 +50,23 @@ body {
     radial-gradient(circle at 85% 18%, rgba(255,92,92,0.12), transparent 22%),
     linear-gradient(180deg, #07111f 0%, #0b1527 45%, #07111f 100%);
   color: #fff7e6;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+body.gold-dashboard-light {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,196,80,0.12), transparent 20%),
+    radial-gradient(circle at 85% 18%, rgba(255,131,92,0.1), transparent 22%),
+    linear-gradient(180deg, #fffaf1 0%, #f6eedf 45%, #fffdf8 100%);
+  color: #4a3412;
+}
+
+body.gold-dashboard-dark {
+  background:
+    radial-gradient(circle at 15% 20%, rgba(255,185,0,0.16), transparent 20%),
+    radial-gradient(circle at 85% 18%, rgba(255,92,92,0.12), transparent 22%),
+    linear-gradient(180deg, #07111f 0%, #0b1527 45%, #07111f 100%);
+  color: #fff7e6;
 }
 
 .app-shell {
@@ -64,6 +81,7 @@ body {
   filter: blur(80px);
   pointer-events: none;
   opacity: 0.6;
+  transition: background 0.25s ease;
 }
 
 .ambient--one {
@@ -80,6 +98,14 @@ body {
   width: 300px;
   height: 300px;
   background: rgba(69,208,227,0.12);
+}
+
+body.gold-dashboard-light .ambient--one {
+  background: rgba(255,185,0,0.14);
+}
+
+body.gold-dashboard-light .ambient--two {
+  background: rgba(255,122,89,0.12);
 }
 
 .hero {
@@ -100,6 +126,12 @@ body {
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.07);
   backdrop-filter: blur(14px);
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+
+body.gold-dashboard-light .brand-mark {
+  background: rgba(255,255,255,0.72);
+  border-color: rgba(170,130,40,0.18);
 }
 
 .hero-logo {
@@ -116,6 +148,11 @@ body {
 .hero-copy p {
   margin: 8px 0 0;
   color: rgba(255,245,225,0.72);
+  transition: color 0.25s ease;
+}
+
+body.gold-dashboard-light .hero-copy p {
+  color: rgba(74,52,18,0.72);
 }
 
 .hero-kicker {
@@ -124,6 +161,10 @@ body {
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: rgba(255,219,136,0.72);
+}
+
+body.gold-dashboard-light .hero-kicker {
+  color: rgba(111,78,0,0.62);
 }
 
 @media (max-width: 768px) {

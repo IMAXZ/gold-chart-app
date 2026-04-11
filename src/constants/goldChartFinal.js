@@ -1,4 +1,4 @@
-export const QUICK_DAYS = [
+﻿export const QUICK_DAYS = [
   { label: '今天', value: 0 },
   { label: '昨天', value: 1 },
   { label: '近 3 天', value: 3 },
@@ -16,8 +16,8 @@ export const GRANULARITY_OPTIONS = [
 ]
 
 export const CURRENCY_OPTIONS = [
-  { label: '美元', value: 'USD', icon: '＄' },
-  { label: '人民币', value: 'CNY', icon: '￥' }
+  { label: '人民币', value: 'CNY', icon: '￥' },
+  { label: '美元', value: 'USD', icon: '$' }
 ]
 
 export const CHART_TYPE_OPTIONS = [

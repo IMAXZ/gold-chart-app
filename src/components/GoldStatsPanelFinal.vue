@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div v-if="items.length" class="stats-grid">
     <article
       v-for="item in items"
@@ -18,48 +18,45 @@
 import { computed } from 'vue'
 import { getUnitLabel } from '@/utils/goldChartFinalData'
 
-function priceHelper(currency) {
-  return `单位：${getUnitLabel(currency)}`
-}
-
 function buildItems(chartType, currency, stats) {
   if (!stats) {
     return []
   }
 
+  const unit = getUnitLabel(currency)
+  const keyPrefix = currency === 'USD' ? 'usd' : 'cny'
+  const tone = currency === 'USD' ? 'usd' : 'cny'
+  const fieldName = keyPrefix === 'usd' ? 'priceUsd' : 'priceCny'
+
   if (chartType === 'rate') {
     return [
-      { key: 'rateStart', label: '起始汇率', value: stats.rateStart, tone: 'rate', helper: 'USD/CNY' },
-      { key: 'rateEnd', label: '最新汇率', value: stats.rateEnd, tone: 'rate', helper: 'USD/CNY' },
-      { key: 'rateChange', label: '汇率涨跌', value: stats.rateChange, suffix: '%', valueClass: stats.rateChangePositive ? 'up' : 'down', helper: '红涨绿跌' },
-      { key: 'usdEnd', label: '美元黄金', value: stats.usdEnd, tone: 'usd', helper: '单位：美元/盎司' },
-      { key: 'cnyEnd', label: '人民币黄金', value: stats.cnyEnd, tone: 'cny', helper: '单位：元/克' },
-      { key: 'rateVolatility', label: '汇率振幅', value: stats.rateVolatility, suffix: '%', tone: 'rate', helper: '区间波动' }
+      { key: 'rateStart', label: '起始汇率', value: stats.rateStart, tone: 'rate', helper: '直接数据：exchangeRate[0]' },
+      { key: 'rateEnd', label: '最新汇率', value: stats.rateEnd, tone: 'rate', helper: '直接数据：exchangeRate[last]' },
+      { key: 'rateChange', label: '汇率涨跌', value: stats.rateChange, suffix: '%', valueClass: stats.rateChangePositive ? 'up' : 'down', helper: '公式：(最新汇率 - 起始汇率) / 起始汇率 × 100%' },
+      { key: 'usdEnd', label: '美元黄金', value: stats.usdEnd, tone: 'usd', helper: '直接数据：priceUsd[last]，单位：美元/盎司' },
+      { key: 'cnyEnd', label: '人民币黄金', value: stats.cnyEnd, tone: 'cny', helper: '直接数据：priceCny[last]，单位：元/克' },
+      { key: 'rateVolatility', label: '汇率振幅', value: stats.rateVolatility, suffix: '%', tone: 'rate', helper: '公式：max(exchangeRate) - min(exchangeRate)' }
     ]
   }
 
   if (chartType === 'compare') {
     return [
-      { key: 'usdMax', label: 'USD 最高', value: stats.usdMax, tone: 'usd', helper: '单位：美元/盎司' },
-      { key: 'usdMin', label: 'USD 最低', value: stats.usdMin, tone: 'usd', helper: '单位：美元/盎司' },
-      { key: 'usdVolatility', label: 'USD 振幅', value: stats.usdVolatility, tone: 'usd', helper: '区间波动' },
-      { key: 'cnyMax', label: 'CNY 最高', value: stats.cnyMax, tone: 'cny', helper: '单位：元/克' },
-      { key: 'cnyMin', label: 'CNY 最低', value: stats.cnyMin, tone: 'cny', helper: '单位：元/克' },
-      { key: 'cnyVolatility', label: 'CNY 振幅', value: stats.cnyVolatility, tone: 'cny', helper: '区间波动' }
+      { key: 'usdMax', label: 'USD 最高', value: stats.usdMax, tone: 'usd', helper: '公式：max(priceUsd)，单位：美元/盎司' },
+      { key: 'usdMin', label: 'USD 最低', value: stats.usdMin, tone: 'usd', helper: '公式：min(priceUsd)，单位：美元/盎司' },
+      { key: 'usdVolatility', label: 'USD 振幅', value: stats.usdVolatility, tone: 'usd', helper: '公式：max(priceUsd) - min(priceUsd)' },
+      { key: 'cnyMax', label: 'CNY 最高', value: stats.cnyMax, tone: 'cny', helper: '公式：max(priceCny)，单位：元/克' },
+      { key: 'cnyMin', label: 'CNY 最低', value: stats.cnyMin, tone: 'cny', helper: '公式：min(priceCny)，单位：元/克' },
+      { key: 'cnyVolatility', label: 'CNY 振幅', value: stats.cnyVolatility, tone: 'cny', helper: '公式：max(priceCny) - min(priceCny)' }
     ]
   }
 
-  const isUsd = currency === 'USD'
-  const tone = isUsd ? 'usd' : 'cny'
-  const keyPrefix = isUsd ? 'usd' : 'cny'
-
   return [
-    { key: `${keyPrefix}Max`, label: '最高价', value: stats[`${keyPrefix}Max`], tone, helper: priceHelper(currency) },
-    { key: `${keyPrefix}Min`, label: '最低价', value: stats[`${keyPrefix}Min`], tone, helper: priceHelper(currency) },
-    { key: `${keyPrefix}Avg`, label: '平均价', value: stats[`${keyPrefix}Avg`], tone, helper: priceHelper(currency) },
-    { key: `${keyPrefix}Start`, label: '起始价', value: stats[`${keyPrefix}Start`], tone, helper: priceHelper(currency) },
-    { key: `${keyPrefix}End`, label: '最新价', value: stats[`${keyPrefix}End`], tone, helper: priceHelper(currency) },
-    { key: `${keyPrefix}Change`, label: chartType === 'trend' ? '累计涨跌' : '区间涨跌', value: stats[`${keyPrefix}Change`], suffix: '%', valueClass: stats[`${keyPrefix}ChangePositive`] ? 'up' : 'down', helper: '红涨绿跌' }
+    { key: `${keyPrefix}Max`, label: '最高价', value: stats[`${keyPrefix}Max`], tone, helper: `公式：max(${fieldName})，单位：${unit}` },
+    { key: `${keyPrefix}Min`, label: '最低价', value: stats[`${keyPrefix}Min`], tone, helper: `公式：min(${fieldName})，单位：${unit}` },
+    { key: `${keyPrefix}Avg`, label: '平均价', value: stats[`${keyPrefix}Avg`], tone, helper: `公式：sum(${fieldName}) / N` },
+    { key: `${keyPrefix}Start`, label: '起始价', value: stats[`${keyPrefix}Start`], tone, helper: `直接数据：${fieldName}[0]` },
+    { key: `${keyPrefix}End`, label: '最新价', value: stats[`${keyPrefix}End`], tone, helper: `直接数据：${fieldName}[last]` },
+    { key: `${keyPrefix}Change`, label: chartType === 'trend' ? '累计涨跌' : '区间涨跌', value: stats[`${keyPrefix}Change`], suffix: '%', valueClass: stats[`${keyPrefix}ChangePositive`] ? 'up' : 'down', helper: '公式：(最新价 - 起始价) / 起始价 × 100%' }
   ]
 }
 
@@ -80,7 +77,7 @@ export default {
 <style scoped>
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 14px;
   margin-top: 18px;
 }
@@ -88,25 +85,26 @@ export default {
 .stat-card {
   padding: 18px;
   border-radius: 22px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  transition: background 0.25s ease, border-color 0.25s ease;
 }
 
 .stat-card--usd {
-  background: linear-gradient(180deg, rgba(255,204,77,0.12), rgba(255,255,255,0.04));
+  background: linear-gradient(180deg, rgba(255, 204, 77, 0.12), rgba(255, 255, 255, 0.04));
 }
 
 .stat-card--cny {
-  background: linear-gradient(180deg, rgba(255,122,89,0.12), rgba(255,255,255,0.04));
+  background: linear-gradient(180deg, rgba(255, 122, 89, 0.12), rgba(255, 255, 255, 0.04));
 }
 
 .stat-card--rate {
-  background: linear-gradient(180deg, rgba(69,208,227,0.14), rgba(255,255,255,0.04));
+  background: linear-gradient(180deg, rgba(69, 208, 227, 0.14), rgba(255, 255, 255, 0.04));
 }
 
 .stat-label {
   margin: 0 0 10px;
-  color: rgba(255,245,225,0.7);
+  color: rgba(255, 245, 225, 0.7);
   font-size: 13px;
 }
 
@@ -120,8 +118,9 @@ export default {
 
 .stat-helper {
   margin: 10px 0 0;
-  color: rgba(255,245,225,0.56);
+  color: rgba(255, 245, 225, 0.56);
   font-size: 12px;
+  line-height: 1.45;
 }
 
 .stat-value.up {
